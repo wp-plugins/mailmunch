@@ -1,9 +1,9 @@
 ===  MailMunch - Increase your Email Subscribers by over 500% ===
 Contributors: mailmunch
-Tags: widget, MailChimp, newsletter, newsletters, MailChimp plugin, Aweber,subscribe, popup, exit popup, exit intent, growth, subscribers, subscription, hellobar, email, posts, sharing, links, popover, analytics , newsletter, automatic , mail, lightbox, analytics, newsletter, getresponse, collect email, optin, optin forms, double optin, popover, optin monster, optinmonster, popup domination, sumome, list builder, popupdomination
+Tags: widget, MailChimp, newsletter, newsletters, MailChimp plugin, Aweber,subscribe, popup, exit popup, exit intent, growth, subscribers, subscription, hellobar, email, posts, sharing, links, popover, analytics , newsletter, automatic , mail, lightbox, analytics, newsletter, getresponse, collect email, optin, optin forms, double optin, popover, optin monster, popup domination, sumome, list builder, popupdomination
 Requires at least: 3.0.1
 Tested up to: 3.9
-Stable tag: 4.4
+Stable tag: 1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 

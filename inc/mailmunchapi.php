@@ -25,6 +25,16 @@
       return $this->ping('/sites/'.$site_id.'/widgets');
     }
 
+    function getWidgetsHtml($site_id) {
+      $this->requestType = 'get';
+      return $this->ping('/sites/'.$site_id.'/widgets/wordpress');
+    }
+
+    function deleteWidget($site_id, $widget_id) {
+      $this->requestType = 'delete';
+      return $this->ping('/sites/'.$site_id.'/widgets/'.$widget_id);
+    }
+
     function hasSite() {
       $request = $this->sites();
       $sites = $request->body;
@@ -79,7 +89,7 @@
     function ping($path, $options=array(), $skipAuth=false) {
       $auth = array('auth' => array($this->email, $this->password));
       $type = $this->requestType;
-      if ($type == 'get') {
+      if ($type != 'post') {
         $request = Requests::$type($this->base_url. $path, $this->headers, $skipAuth ? $options : array_merge($options, $auth));
       }
       else {

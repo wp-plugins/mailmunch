@@ -3,7 +3,7 @@
   Plugin Name: MailMunch
   Plugin URI: http://www.mailmunch.co
   Description: Collect email addresses from website visitors and grow your subscribers with our attention grabbing optin-forms, entry/exit intent technology, and other effective lead-generation forms.
-  Version: 1.2
+  Version: 1.3
   Author: MailMunch
   Author URI: http://www.mailmunch.co
   License: GPL2
@@ -13,7 +13,7 @@
   require_once( plugin_dir_path( __FILE__ ) . 'inc/common.php' );
 
   define( 'MAILMUNCH_SLUG', "mailmunch");
-  define( 'MAILMUNCH_VER', "1.0.1");
+  define( 'MAILMUNCH_VER', "1.3");
   define( 'MAILMUNCH_URL', "www.mailmunch.co");
 
   // Adding Admin Menu
@@ -44,6 +44,16 @@
     if (!$mailmunch_data["script_src"]) return;
 
     echo "<script type='text/javascript'>";
+    echo "var _mmunch = {'front': false, 'page': false, 'post': false, 'category': false, 'author': false, 'search': false, 'attachment': false, 'tag': false};";
+    if (is_front_page() || is_home()) { echo "_mmunch['front'] = true;"; }
+    if (is_page()) { echo "_mmunch['page'] = true;"; }
+    if (is_single()) { echo "_mmunch['post'] = true; _mmunch['postCategories'] = '".json_encode(get_the_category())."';"; }
+    if (is_category()) { echo "_mmunch['category'] = true; _mmunch['categoryData'] = '".json_encode(get_category(get_query_var('cat')))."';"; }
+    if (is_search()) { echo "_mmunch['search'] = true;"; }
+    if (is_author()) { echo "_mmunch['author'] = true;"; }
+    if (is_tag()) { echo "_mmunch['tag'] = true;"; }
+    if (is_attachment()) { echo "_mmunch['attachment'] = true;"; }
+
     echo "(function(){ setTimeout(function(){ var d = document, f = d.getElementsByTagName('script')[0], s = d.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '".$mailmunch_data["script_src"]."'; f.parentNode.insertBefore(s, f); }, 1); })();";
     echo "</script>";
   }
@@ -78,6 +88,7 @@
       $post_action = $_POST["action"];
 
       if ($post_action == "save_settings") { 
+
         $mailmunch_data = array_merge(unserialize(get_option('mailmunch_data')), $post_data);
         update_option("mailmunch_data", serialize($mailmunch_data));
       } else if ($post_action == "sign_in") {
@@ -86,13 +97,26 @@
           update_option("mailmunch_user_email", $_POST["email"]);
           update_option("mailmunch_user_password", $_POST["password"]);
         }
+
       } else if ($post_action == "unlink_account") {
+
         $mailmunch_data = array();
         $mailmunch_data["site_url"] = home_url();
         $mailmunch_data["site_name"] = get_bloginfo();
         update_option("mailmunch_data", serialize($mailmunch_data));
         delete_option("mailmunch_user_email", "");
         delete_option("mailmunch_user_password", "");
+
+      } else if ($post_action == "delete_widget") {
+
+        if ($_POST["site_id"] && $_POST["widget_id"]) {
+          $account_info = getEmailPassword();
+          $mailmunch_email = $account_info['email'];
+          $mailmunch_password = $account_info['password'];
+          $mm = new MailmunchApi($account_info['email'], $account_info["password"], "http://".MAILMUNCH_URL);
+          $request = $mm->deleteWidget($_POST["site_id"], $_POST["widget_id"]);
+        }
+
       }
     }
 
@@ -203,85 +227,10 @@
       }
     }
 
-    $request = $mm->widgets($mailmunch_data["site_id"]);
-    $widgets = json_decode($request->body);
-?>
-
-<?php
-    if (sizeof($widgets) > 0) {
-?>
-<div class="container">
-  <div class="page-header">
-    <h1 class="pull-left">Optin Forms</h1>
-
-    <div class="pull-right action-btns">
-      <form id="unlink-account" class="pull-left" action="" method="POST" onsubmit="return confirm('Are you sure you want to switch to another MailMunch account?')">
-        <input type="hidden" name="action" value="unlink_account" />
-        <input type="submit" value="Switch Account" class="unlink-btn" />
-      </form>
-
-      <a class="btn btn-success btn-sm new-optin-btn" href="http://<?php echo MAILMUNCH_URL; ?>/sso?email=<?php echo $mailmunch_email; ?>&password=<?php echo $mailmunch_password; ?>&next_url=<?php echo urlencode("/sites/".$mailmunch_data["site_id"]."/widgets/new?wordpress=1"); ?>" target="_mailmunch_window">New Optin Form</a>
-    </div>
-    <div class="clearfix"></div>
-  </div>
-
-  <table class="table table-condensed" style="margin-top: 20px;">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Exit Intent</th>
-        <th>Loading Delay</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php foreach ($widgets as $widget) { ?>
-      <tr id="widget_<?php echo $widget->id ?>">
-        <td><?php echo $widget->name ?></td>
-        <td><?php if ($widget->exit_intent) { echo "Yes"; } else { echo "No"; } ?></td>
-        <td><?php if ($widget->loading_delay) { echo $widget->loading_delay; } else { echo "0"; } ?> seconds</td>
-        <td>
-          <?php if (widget.enabled) { ?>
-          <span class="label label-success">Active</span>
-          <?php } else { ?>
-          <span class="label label-danger">Inactive</span>
-          <?php } ?>
-        </td>
-        <td class="actions">
-          <div class="btn-group">
-            <a href="http://<?php echo MAILMUNCH_URL; ?>/sso?email=<?php echo $mailmunch_email; ?>&password=<?php echo $mailmunch_password; ?>&next_url=<?php echo urlencode("/sites/".$mailmunch_data["site_id"]."/widgets/".$widget->id."/design?wp_layout=1"); ?>" target="_mailmunch_window" class="btn btn-info btn-sm">Edit Optin Form</a>
-          </div>
-        </td>
-      </tr>
-      <?php } ?>
-    </tbody>
-  </table>
-</div>
-<?php
-    } else {
-?>
-<div class="container">
-  <div class="page-header">
-    <h1 class="pull-left">Optin Forms</h1>
-
-    <div class="pull-right">
-      <form id="unlink-account" action="" method="POST" onsubmit="return confirm('Are you sure you want to switch to another MailMunch account?')">
-        <input type="hidden" name="action" value="unlink_account" />
-        <input type="submit" value="Switch MailMunch Account" class="unlink-btn" />
-      </form>
-    </div>
-    <div class="clearfix"></div>
-  </div>
-
-  <div class="alert alert-warning alert-dismissable text-center">
-    <strong>Almost There!</strong> You have no Optin Forms yet. Click the button below to create your first one.
-  </div>
-
-  <div class="text-center">
-    <a href="http://<?php echo MAILMUNCH_URL; ?>/sso?email=<?php echo $mailmunch_email; ?>&password=<?php echo $mailmunch_password; ?>&next_url=<?php echo urlencode("/sites/".$mailmunch_data["site_id"]."/widgets/new?wordpress=1"); ?>" target="_mailmunch_window" class="btn btn-success btn-lg">Create Your First Optin Form</a>
-  </div>
-</div>
-<?php
-    }
+    $request = $mm->getWidgetsHtml($mailmunch_data["site_id"]);
+    $widgets = $request->body;
+    $widgets = str_replace("{{EMAIL}}", $mailmunch_email, $widgets);
+    $widgets = str_replace("{{PASSWORD}}", $mailmunch_password, $widgets);
+    echo $widgets;
   }
 ?>
