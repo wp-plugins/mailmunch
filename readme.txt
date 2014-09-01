@@ -83,10 +83,13 @@ NO. MailMunch is super simple and easy to use for anyone. Our designer lets you 
 
 == Screenshots ==
 
-1. This is the first step of MailMunch optin form designer inside the WordPress admin panel
+1. This is the MailMunch optin form designer where you can customize your optin form
 2. The second step is configuring your optin form for things like when to show it, how often to show it, and where to go after they subscribe
-3. The final step is targeting which URLs, posts or categories to show the optin form on and where to not show it
-4. And finally, we have the optin form working live on your blog - increasing your subscribers :)
+3. This is the integration step where you can connect your optin form to sync with all popular email marketing tools like MailChimp, Aweber, Constant Contact, etc
+4. This is the final step where you can publish your optin form to all or selected posts, categories or pages
+5. And finally, we have the optin form working live on your blog - increasing your subscribers :)
+6. An example from a MailMunch user site
+7. Another example from a MailMunch user site
 
 == Changelog ==
 
