@@ -3,7 +3,7 @@ Contributors: mailmunch
 Tags: widget, MailChimp, newsletter, newsletters, MailChimp plugin, Aweber,subscribe, popup, exit popup, exit intent, growth, subscribers, subscription, hellobar, email, posts, sharing, links, popover, analytics , newsletter, automatic , mail, lightbox, analytics, newsletter, getresponse, collect email, optin, optin forms, double optin, popover, optin monster, popup domination, sumome, list builder, popupdomination
 Requires at least: 3.0.1
 Tested up to: 3.9
-Stable tag: 1.3
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,12 @@ MailMunch provides the tools you need to grow your email subscribers and convert
 = Beautiful Optin Form Designs =
 
 MailMunch Designer let's you choose from professionally designed high-converting themes. Each design has been maximized for high conversion rates. You can further customize the optin forms to match with your website or blog.
+
+= Connect With Major Email Providers =
+
+Easily connect with all major email marketing providers including Aweber, MailChimp, Constant Contact, GetResponse and Campaign Monitor. This means that if you use an email manager like MailChimp, your new subscribers can automatically subscribe to your list instantly.
+
+Alternately, you can simply set MailMunch to collect email addresses that you can export in CSV format.
 
 = A/B Testing =
 
@@ -90,7 +96,13 @@ NO. MailMunch is super simple and easy to use for anyone. Our designer lets you 
 = 1.0.1 =
 * Added better integration
 
+= 1.3.1 =
+* Added powerful targeting for pages, posts, categories, authors and attachments
+
 == Upgrade Notice == 
 
 = 1.0.1 = 
 * Seamless integration with MailMunch designer
+
+= 1.3.1 =
+* Added powerful targeting for pages, posts, categories, authors and attachments
