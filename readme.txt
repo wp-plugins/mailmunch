@@ -88,8 +88,8 @@ NO. MailMunch is super simple and easy to use for anyone. Our designer lets you 
 3. This is the integration step where you can connect your optin form to sync with all popular email marketing tools like MailChimp, Aweber, Constant Contact, etc
 4. This is the final step where you can publish your optin form to all or selected posts, categories or pages
 5. And finally, we have the optin form working live on your blog - increasing your subscribers :)
-6. An example from a real MailMunch user
-7. An example from a real MailMunch user
+6. An example from a MailMunch user site
+7. Another example from a MailMunch user site
 
 == Changelog ==
 
