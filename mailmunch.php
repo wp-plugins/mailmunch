@@ -3,7 +3,7 @@
   Plugin Name: MailMunch
   Plugin URI: http://www.mailmunch.co
   Description: Collect email addresses from website visitors and grow your subscribers with our attention grabbing optin-forms, entry/exit intent technology, and other effective lead-generation forms.
-  Version: 1.3
+  Version: 1.3.1
   Author: MailMunch
   Author URI: http://www.mailmunch.co
   License: GPL2
@@ -13,7 +13,7 @@
   require_once( plugin_dir_path( __FILE__ ) . 'inc/common.php' );
 
   define( 'MAILMUNCH_SLUG', "mailmunch");
-  define( 'MAILMUNCH_VER', "1.3");
+  define( 'MAILMUNCH_VER', "1.3.1");
   define( 'MAILMUNCH_URL', "www.mailmunch.co");
 
   // Adding Admin Menu
@@ -47,8 +47,8 @@
     echo "var _mmunch = {'front': false, 'page': false, 'post': false, 'category': false, 'author': false, 'search': false, 'attachment': false, 'tag': false};";
     if (is_front_page() || is_home()) { echo "_mmunch['front'] = true;"; }
     if (is_page()) { echo "_mmunch['page'] = true;"; }
-    if (is_single()) { echo "_mmunch['post'] = true; _mmunch['postCategories'] = '".json_encode(get_the_category())."';"; }
-    if (is_category()) { echo "_mmunch['category'] = true; _mmunch['categoryData'] = '".json_encode(get_category(get_query_var('cat')))."';"; }
+    if (is_single()) { echo "_mmunch['post'] = true; _mmunch['postData'] = ".json_encode(get_post())."; _mmunch['postCategories'] = ".json_encode(get_the_category()).";"; }
+    if (is_category()) { echo "_mmunch['category'] = true; _mmunch['categoryData'] = ".json_encode(get_category(get_query_var('cat'))).";"; }
     if (is_search()) { echo "_mmunch['search'] = true;"; }
     if (is_author()) { echo "_mmunch['author'] = true;"; }
     if (is_tag()) { echo "_mmunch['tag'] = true;"; }
