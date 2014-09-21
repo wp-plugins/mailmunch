@@ -3,7 +3,7 @@ Contributors: mailmunch
 Tags: widget, MailChimp, newsletter, newsletters, MailChimp plugin, Aweber,subscribe, popup, exit popup, exit intent, growth, subscribers, subscription, hellobar, email, posts, sharing, links, popover, analytics , newsletter, automatic , mail, lightbox, analytics, newsletter, getresponse, collect email, optin, optin forms, double optin, popover, optin monster, popup domination, sumome, list builder, mailchimp, popupdomination, optin revolution
 Requires at least: 3.0.1
 Tested up to: 4.0
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -131,19 +131,27 @@ Why people use Aweber
 
 == Changelog ==
 
-= 1.0 =
-* The first version of MailMunch's WordPress plugin
+= 1.3.2 =
+* Now supports multiple types of optin forms and themes
+* New type of optin form that could be embedded before, after or in the middle of your posts
+* Brand new UI for admin dashboard
+
+= 1.3.1 =
+* Added powerful targeting for pages, posts, categories, authors and attachments
 
 = 1.0.1 =
 * Added better integration
 
-= 1.3.1 =
-* Added powerful targeting for pages, posts, categories, authors and attachments
+= 1.0 =
+* The first version of MailMunch's WordPress plugin
 
 == Upgrade Notice == 
 
-= 1.0.1 = 
-* Seamless integration with MailMunch designer
+= 1.3.2 =
+* Added a new type of optin form that could be embedded before, after or in the middle of your posts and pages
 
 = 1.3.1 =
 * Added powerful targeting for pages, posts, categories, authors and attachments
+
+= 1.0.1 = 
+* Seamless integration with MailMunch designer
