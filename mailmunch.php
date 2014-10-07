@@ -3,7 +3,7 @@
   Plugin Name: MailMunch
   Plugin URI: http://www.mailmunch.co
   Description: Collect email addresses from website visitors and grow your subscribers with our attention grabbing optin-forms, entry/exit intent technology, and other effective lead-generation forms.
-  Version: 1.3.3
+  Version: 1.3.4
   Author: MailMunch
   Author URI: http://www.mailmunch.co
   License: GPL2
@@ -13,7 +13,7 @@
   require_once( plugin_dir_path( __FILE__ ) . 'inc/common.php' );
 
   define( 'MAILMUNCH_SLUG', "mailmunch");
-  define( 'MAILMUNCH_VER', "1.3.3");
+  define( 'MAILMUNCH_VER', "1.3.4");
   define( 'MAILMUNCH_URL', "www.mailmunch.co");
 
   // Adding Admin Menu
@@ -83,8 +83,6 @@
 
   function add_post_containers($content) {
     if (is_single() || is_page()) {
-      //$content = insert_form_after_paragraph("<div class='mailmunch-forms-after-paragraph-one' style='display: none !important;'></div>", 1, $content);
-      //$content = insert_form_after_paragraph("<div class='mailmunch-forms-after-paragraph-two' style='display: none !important;'></div>", 2, $content);
       $content = insert_form_after_paragraph("<div class='mailmunch-forms-in-post-middle' style='display: none !important;'></div>", "middle", $content);
       $content = "<div class='mailmunch-forms-before-post' style='display: none !important;'></div>" . $content . "<div class='mailmunch-forms-after-post' style='display: none !important;'></div>";
     }
@@ -134,12 +132,19 @@
 
         $mailmunch_data = array_merge(unserialize(get_option('mailmunch_data')), $post_data);
         update_option("mailmunch_data", serialize($mailmunch_data));
+      
       } else if ($post_action == "sign_in") {
+
         $mm = new MailmunchApi($_POST["email"], $_POST["password"], "http://".MAILMUNCH_URL);
         if ($mm->validPassword()) {
           update_option("mailmunch_user_email", $_POST["email"]);
           update_option("mailmunch_user_password", $_POST["password"]);
         }
+
+      } else if ($post_action == "grant_permissions") {
+
+        update_option("mailmunch_permissions_granted", true);
+        update_option("mailmunch_user_email", $_POST["email"]);
 
       } else if ($post_action == "unlink_account") {
 
@@ -161,6 +166,45 @@
         }
 
       }
+    }
+
+    if (get_option("mailmunch_permissions_granted") == "" && get_option("mailmunch_user_email") == "") {
+      $current_user = wp_get_current_user();
+?>
+<div class="container">
+  <div class="page-header">
+    <h1>Activate MailMunch</h1>
+  </div>
+
+  <div class="alert alert-warning">To activate the plugin, please make sure the following information is correct.</div>
+
+  <div id="sign-in-form" class="form-container">
+    <form action="" method="POST">
+      <input type="hidden" name="action" value="grant_permissions" />
+
+      <div class="form-group">
+        <label>Wordpress Name</label>
+        <input type="text" placeholder="Site Name" name="site_name" value="<?php echo $mailmunch_data["site_name"] ?>" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label>Wordpress URL</label>
+        <input type="text" placeholder="Site URL" name="site_url" value="<?php echo $mailmunch_data["site_url"] ?>" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" placeholder="Email Address" name="email" value="<?php echo $current_user->user_email ?>" class="form-control">
+      </div>
+
+      <div class="form-group">
+        <input type="submit" value="Activate &raquo;" class="btn btn-success btn-lg" />
+      </div>
+    </form>
+  </div>
+</div>
+<?php
+      return;
     }
 
     $account_info = getEmailPassword();
