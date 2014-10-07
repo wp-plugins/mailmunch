@@ -4,13 +4,17 @@ function getEmailPassword() {
   $mailmunch_email = get_option("mailmunch_user_email");
   $mailmunch_password = get_option("mailmunch_user_password");
 
-  if (empty($mailmunch_email) || empty($mailmunch_password)) {
+  if (empty($mailmunch_email)) {
     $current_user = wp_get_current_user();
     update_option("mailmunch_user_email", $current_user->user_email);
-    update_option("mailmunch_user_password", uniqid());
-    $mailmunch_email = get_option("mailmunch_user_email");
-    $mailmunch_password = get_option("mailmunch_user_password");
   }
+
+  if (empty($mailmunch_password)) {
+    update_option("mailmunch_user_password", uniqid());
+  }
+
+  $mailmunch_email = get_option("mailmunch_user_email");
+  $mailmunch_password = get_option("mailmunch_user_password");
 
   return array('email' => $mailmunch_email, 'password' => $mailmunch_password);
 }
