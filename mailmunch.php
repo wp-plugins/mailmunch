@@ -141,10 +141,29 @@
           update_option("mailmunch_user_password", $_POST["password"]);
         }
 
-      } else if ($post_action == "grant_permissions") {
+      } else if ($post_action == "sign_up") {
 
-        update_option("mailmunch_permissions_granted", true);
-        update_option("mailmunch_user_email", $_POST["email"]);
+        if (empty($_POST["email"]) || empty($_POST["password"])) {
+          $invalid_email_password = true;
+        } else {
+          update_option("mailmunch_user_email", $_POST["email"]);
+          update_option("mailmunch_user_password", $_POST["password"]);
+          $mailmunch_data = unserialize(get_option("mailmunch_data"));
+          $mailmunch_data["site_url"] = $_POST["site_url"];
+          $mailmunch_data["site_name"] = $_POST["site_name"];
+          update_option("mailmunch_data", serialize($mailmunch_data));
+
+          $account_info = getEmailPassword();
+          $mailmunch_email = $account_info['email'];
+          $mailmunch_password = $account_info['password'];
+
+          $mm = new MailmunchApi($mailmunch_email, $mailmunch_password, "http://".MAILMUNCH_URL);
+          if ($mm->isNewUser()) {
+            $mm->signUp();
+          } else {
+            $user_exists = true;
+          }
+        }
 
       } else if ($post_action == "unlink_account") {
 
@@ -168,19 +187,37 @@
       }
     }
 
-    if (get_option("mailmunch_permissions_granted") == "" && get_option("mailmunch_user_email") == "") {
+    // If we already have the user's email stored, let's create the API instance
+    // If we don't have it yet, make sure NOT to phone home any user data
+    if (get_option("mailmunch_user_email") != "") {
+      $account_info = getEmailPassword();
+      $mailmunch_email = $account_info['email'];
+      $mailmunch_password = $account_info['password'];
+
+      $mm = new MailmunchApi($mailmunch_email, $mailmunch_password, "http://".MAILMUNCH_URL);
+      $valid_password = $mm->validPassword();
+    }
+
+    // If we don't already have the user's email, show the sign up / sign in form to the user
+    if (get_option("mailmunch_user_email") == "" || !$valid_password || $invalid_email_password) {
       $current_user = wp_get_current_user();
 ?>
-<div class="container">
+<div id="sign-up-form" class="container<?php if (!$_POST || ($_POST["action"] != "sign_in" && $_POST["action"] != "unlink_account")) { ?> active<?php } ?>">
   <div class="page-header">
-    <h1>Activate MailMunch</h1>
+    <h1>Create Account</h1>
   </div>
 
-  <div class="alert alert-warning">To activate the plugin, please make sure the following information is correct.</div>
+  <p>We will now create your account on MailMunch. Make sure the following information is correct:</p>
 
-  <div id="sign-in-form" class="form-container">
+  <?php if ($user_exists) { ?>
+  <div id="invalid-alert" class="alert alert-danger" role="alert">Account with this email already exists. Please sign in using your password.</div>
+  <?php } else if ($invalid_email_password) { ?>
+  <div id="invalid-alert" class="alert alert-danger" role="alert">Invalid email or password. Please enter valid information below.</div>
+  <?php } ?>
+
+  <div class="form-container">
     <form action="" method="POST">
-      <input type="hidden" name="action" value="grant_permissions" />
+      <input type="hidden" name="action" value="sign_up" />
 
       <div class="form-group">
         <label>Wordpress Name</label>
@@ -198,57 +235,55 @@
       </div>
 
       <div class="form-group">
-        <input type="submit" value="Activate &raquo;" class="btn btn-success btn-lg" />
-      </div>
-    </form>
-  </div>
-</div>
-<?php
-      return;
-    }
-
-    $account_info = getEmailPassword();
-    $mailmunch_email = $account_info['email'];
-    $mailmunch_password = $account_info['password'];
-
-    $mm = new MailmunchApi($mailmunch_email, $mailmunch_password, "http://".MAILMUNCH_URL);
-    if ($mm->isNewUser()) {
-      $mm->signUp();
-    } else if (!$mm->validPassword()) {
-?>
-<div class="container">
-  <div class="page-header">
-    <h1>Sign In</h1>
-  </div>
-
-  <p>You may already have a MailMunch account. Sign in using your email and password below.</p>
-
-  <?php if ($_POST && $_POST["action"] == "sign_in") { ?>
-  <div id="invalid-alert" class="alert alert-danger" role="alert">Invalid Email or Password. Please try again.</div>
-  <?php } ?>
-
-  <div id="sign-in-form" class="form-container">
-    <form action="" method="POST">
-      <input type="hidden" name="action" value="sign_in" />
-
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" placeholder="Email Address" name="email" class="form-control">
-      </div>
-      <div class="form-group">
         <label>Password</label>
         <input type="password" placeholder="Password" name="password" class="form-control">
       </div>
 
       <div class="form-group">
-        <input type="submit" value="Sign In" class="btn btn-success btn-lg" />
+        <input type="submit" value="Sign Up &raquo;" class="btn btn-success btn-lg" />
+      </div>
+    </form>
+  </div>
+
+  <p>Already have an account? <a id="show-sign-in" onclick="showSignInForm();">Sign In</a></p>
+</div>
+
+<div id="sign-in-form" class="container<?php if ($_POST && ($_POST["action"] == "sign_in" || $_POST["action"] == "unlink_account")) { ?> active<?php } ?>">
+  <div class="page-header">
+    <h1>Sign In</h1>
+  </div>
+
+  <p>Sign in using your email and password below.</p>
+
+  <?php if ($_POST && $_POST["action"] == "sign_in") { ?>
+  <div id="invalid-alert" class="alert alert-danger" role="alert">Invalid Email or Password. Please try again.</div>
+  <?php } ?>
+
+  <div class="form-container">
+    <form action="" method="POST">
+      <input type="hidden" name="action" value="sign_in" />
+
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" placeholder="Email Address" name="email" class="form-control" value="<?php echo $_POST["email"] ?>" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" placeholder="Password" name="password" class="form-control" />
+      </div>
+
+      <div class="form-group">
+        <input type="submit" value="Sign In &raquo;" class="btn btn-success btn-lg" />
       </div>
     </form>
   </div>
 
   <p>Forgot your password? <a href="http://<?php echo MAILMUNCH_URL; ?>/users/password/new" target="_blank">Click here</a> to retrieve it.</p>
+  <p>Don't have an account? <a id="show-sign-up" onclick="showSignUpForm();">Sign Up</a></p>
 </div>
 <?php
+
+      // Do NOT move beyond this until the user has granted permissions to sign up or signed in
       return;
     }
 

@@ -1,3 +1,16 @@
+#sign-in-form, #sign-up-form {
+  display: none;
+}
+
+#sign-in-form.active, #sign-up-form.active {
+  display: block;
+}
+
+#show-sign-in, #show-sign-up {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 #mailmunch_frame {
   width: 720px;
   height: 650px;
@@ -181,7 +194,7 @@ output {
 }
 .form-control {
   display: block;
-  width: 100%;
+  width: 400px;
   height: 34px;
   padding: 6px 12px;
   font-size: 14px;
