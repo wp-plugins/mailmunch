@@ -143,22 +143,26 @@
 
       } else if ($post_action == "sign_up") {
 
-        update_option("mailmunch_user_email", $_POST["email"]);
-        update_option("mailmunch_user_password", $_POST["password"]);
-        $mailmunch_data = unserialize(get_option("mailmunch_data"));
-        $mailmunch_data["site_url"] = $_POST["site_url"];
-        $mailmunch_data["site_name"] = $_POST["site_name"];
-        update_option("mailmunch_data", serialize($mailmunch_data));
-
-        $account_info = getEmailPassword();
-        $mailmunch_email = $account_info['email'];
-        $mailmunch_password = $account_info['password'];
-
-        $mm = new MailmunchApi($mailmunch_email, $mailmunch_password, "http://".MAILMUNCH_URL);
-        if ($mm->isNewUser()) {
-          $mm->signUp();
+        if (empty($_POST["email"]) || empty($_POST["password"])) {
+          $invalid_email_password = true;
         } else {
-          $user_exists = true;
+          update_option("mailmunch_user_email", $_POST["email"]);
+          update_option("mailmunch_user_password", $_POST["password"]);
+          $mailmunch_data = unserialize(get_option("mailmunch_data"));
+          $mailmunch_data["site_url"] = $_POST["site_url"];
+          $mailmunch_data["site_name"] = $_POST["site_name"];
+          update_option("mailmunch_data", serialize($mailmunch_data));
+
+          $account_info = getEmailPassword();
+          $mailmunch_email = $account_info['email'];
+          $mailmunch_password = $account_info['password'];
+
+          $mm = new MailmunchApi($mailmunch_email, $mailmunch_password, "http://".MAILMUNCH_URL);
+          if ($mm->isNewUser()) {
+            $mm->signUp();
+          } else {
+            $user_exists = true;
+          }
         }
 
       } else if ($post_action == "unlink_account") {
@@ -195,7 +199,7 @@
     }
 
     // If we don't already have the user's email, show the sign up / sign in form to the user
-    if (get_option("mailmunch_user_email") == "" || !$valid_password) {
+    if (get_option("mailmunch_user_email") == "" || !$valid_password || $invalid_email_password) {
       $current_user = wp_get_current_user();
 ?>
 <div id="sign-up-form" class="container<?php if (!$_POST || ($_POST["action"] != "sign_in" && $_POST["action"] != "unlink_account")) { ?> active<?php } ?>">
@@ -207,6 +211,8 @@
 
   <?php if ($user_exists) { ?>
   <div id="invalid-alert" class="alert alert-danger" role="alert">Account with this email already exists. Please sign in using your password.</div>
+  <?php } else if ($invalid_email_password) { ?>
+  <div id="invalid-alert" class="alert alert-danger" role="alert">Invalid email or password. Please enter valid information below.</div>
   <?php } ?>
 
   <div class="form-container">
