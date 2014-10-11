@@ -207,7 +207,23 @@
     <h1>Create Account</h1>
   </div>
 
-  <p>We will now create your account on MailMunch. Make sure the following information is correct:</p>
+  <?php add_thickbox(); ?>
+
+  <div id="why-account" style="display:none;">
+    <p>
+      There are a few reasons we require you to create an account to use MailMunch:
+    </p>
+
+    <ol>
+      <li>MailMunch is a not just a Wordpress plugin but also a standalone service. You can later use the same account on your other non-Wordpress websites too.</li>
+      <li>Creating an account helps us better serve you, and provide you with better customer support.</li>
+      <li>It gives us the ability to fix bugs and improve performance faster, and without you having to update the plugin yourself.</li>
+    </ol>
+
+    <p><strong>We have a strict no-spam policy. We will never spam you or share your information with any third-party.</strong> If you have any questions, please <a href="http://www.mailmunch.co/contact" target="_blank">contact us</a>.</p>
+  </div>
+
+  <p>We will now create your account on MailMunch (<a href="#TB_inline?width=500&height=250&inlineId=why-account" title="Why do I need an account to use the MailMunch plugin?" class="thickbox">Why?</a>). Make sure the following information is correct:</p>
 
   <?php if ($user_exists) { ?>
   <div id="invalid-alert" class="alert alert-danger" role="alert">Account with this email already exists. Please sign in using your password.</div>
