@@ -3,7 +3,7 @@
   Plugin Name: MailMunch
   Plugin URI: http://www.mailmunch.co
   Description: Collect email addresses from website visitors and grow your subscribers with our attention grabbing optin-forms, entry/exit intent technology, and other effective lead-generation forms.
-  Version: 1.3.5
+  Version: 1.3.6
   Author: MailMunch
   Author URI: http://www.mailmunch.co
   License: GPL2
@@ -13,7 +13,7 @@
   require_once( plugin_dir_path( __FILE__ ) . 'inc/common.php' );
 
   define( 'MAILMUNCH_SLUG', "mailmunch");
-  define( 'MAILMUNCH_VER', "1.3.5");
+  define( 'MAILMUNCH_VER', "1.3.6");
   define( 'MAILMUNCH_URL', "www.mailmunch.co");
 
   // Create unique WordPress instance ID
@@ -169,7 +169,8 @@
 
           $mm = new MailmunchApi($mailmunch_email, $mailmunch_password, "http://".MAILMUNCH_URL);
           if ($mm->isNewUser($_POST['email'])) {
-            $result = json_decode($mm->updateGuest($_POST['email'])['body']);
+            $update_result = $mm->updateGuest($_POST['email']);
+            $result = json_decode($update_result['body']);
             update_option("mailmunch_user_email", $result->email);
             if (!$result->guest_user) { delete_option("mailmunch_guest_user"); }
             $mailmunch_email = $result->email;
@@ -177,7 +178,8 @@
             // We have update the guest with real email address, let's create a site now
             $mm = new MailmunchApi($mailmunch_email, $mailmunch_password, "http://".MAILMUNCH_URL);
 
-            $result = json_decode($mm->updateSite($mailmunch_data["site_name"], $mailmunch_data["site_url"])['body']);
+            $update_result = $mm->updateSite($mailmunch_data["site_name"], $mailmunch_data["site_url"]);
+            $result = json_decode($update_result['body']);
             $mailmunch_data = unserialize(get_option("mailmunch_data"));
             $mailmunch_data["site_url"] = $result->domain;
             $mailmunch_data["site_name"] = $result->name;

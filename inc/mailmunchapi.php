@@ -129,7 +129,8 @@
         $email = $this->email;
       }
       $this->requestType = 'get';
-      return $this->ping('/users/exists?user[email]='. $email, array(), true)['body'] == 'false';
+      $result = $this->ping('/users/exists?user[email]='. $email, array(), true);
+      return $result['body'] == 'false';
     }
 
     function ping($path, $options=array(), $skipAuth=false) {
