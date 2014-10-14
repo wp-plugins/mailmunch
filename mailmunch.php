@@ -3,7 +3,7 @@
   Plugin Name: MailMunch
   Plugin URI: http://www.mailmunch.co
   Description: Collect email addresses from website visitors and grow your subscribers with our attention grabbing optin-forms, entry/exit intent technology, and other effective lead-generation forms.
-  Version: 1.3.4
+  Version: 1.3.6
   Author: MailMunch
   Author URI: http://www.mailmunch.co
   License: GPL2
@@ -13,33 +13,38 @@
   require_once( plugin_dir_path( __FILE__ ) . 'inc/common.php' );
 
   define( 'MAILMUNCH_SLUG', "mailmunch");
-  define( 'MAILMUNCH_VER', "1.3.4");
+  define( 'MAILMUNCH_VER', "1.3.6");
   define( 'MAILMUNCH_URL', "www.mailmunch.co");
 
-  // Adding Admin Menu
-  add_action( 'admin_menu', 'register_mailmunch_page' );
+  // Create unique WordPress instance ID
+  if (get_option("mailmunch_wordpress_instance_id") == "") {
+    update_option("mailmunch_wordpress_instance_id", uniqid());
+  }
 
-  function register_mailmunch_page(){
+  // Adding Admin Menu
+  add_action( 'admin_menu', 'mailmunch_register_page' );
+
+  function mailmunch_register_page(){
      $menu_page = add_menu_page( 'MailMunch Settings', 'MailMunch', 'manage_options', MAILMUNCH_SLUG, 'mailmunch_setup', plugins_url( 'img/icon.png', __FILE__ ), 102.786 ); 
      // If successful, load admin assets only on that page.
-     if ($menu_page) add_action('load-' . $menu_page, 'load_plugin_assets');
+     if ($menu_page) add_action('load-' . $menu_page, 'mailmunch_load_plugin_assets');
   }
 
-  function load_plugin_assets() {
-    add_action( 'admin_enqueue_scripts', 'enqueue_admin_styles' );
-    add_action( 'admin_enqueue_scripts', 'enqueue_admin_scripts'  );
+  function mailmunch_load_plugin_assets() {
+    add_action( 'admin_enqueue_scripts', 'mailmunch_enqueue_admin_styles' );
+    add_action( 'admin_enqueue_scripts', 'mailmunch_enqueue_admin_scripts'  );
   }
 
-  function enqueue_admin_styles() {
+  function mailmunch_enqueue_admin_styles() {
     wp_enqueue_style(MAILMUNCH_SLUG . '-admin-styles', plugins_url( 'css/admin.css', __FILE__ ), array(), MAILMUNCH_VER );
   }
 
-  function enqueue_admin_scripts() {
+  function mailmunch_enqueue_admin_scripts() {
     wp_enqueue_script(MAILMUNCH_SLUG . '-admin-script', plugins_url( 'js/admin.js', __FILE__ ), array( 'jquery' ), MAILMUNCH_VER );
   }
 
   // Adding MailMunch Asset Files (JS + CSS) 
-  function load_mailmunch_asset_code() {
+  function mailmunch_load_asset_code() {
     $mailmunch_data = unserialize(get_option("mailmunch_data"));
     if (!$mailmunch_data["script_src"]) return;
 
@@ -71,26 +76,26 @@
 
     if (function_exists('wp_footer')) {
       if (!$_POST['mailmunch_data']) {
-        add_action( 'wp_footer', 'load_mailmunch_asset_code' ); 
+        add_action( 'wp_footer', 'mailmunch_load_asset_code' ); 
       }
     }
     elseif (function_exists('wp_head')) {
       if (!$_POST['mailmunch_data']) {
-        add_action( 'wp_head', 'load_mailmunch_asset_code' ); 
+        add_action( 'wp_head', 'mailmunch_load_asset_code' ); 
       }
     }
   }
 
-  function add_post_containers($content) {
+  function mailmunch_add_post_containers($content) {
     if (is_single() || is_page()) {
-      $content = insert_form_after_paragraph("<div class='mailmunch-forms-in-post-middle' style='display: none !important;'></div>", "middle", $content);
+      $content = mailmunch_insert_form_after_paragraph("<div class='mailmunch-forms-in-post-middle' style='display: none !important;'></div>", "middle", $content);
       $content = "<div class='mailmunch-forms-before-post' style='display: none !important;'></div>" . $content . "<div class='mailmunch-forms-after-post' style='display: none !important;'></div>";
     }
 
     return $content;
   }
 
-  function insert_form_after_paragraph($insertion, $paragraph_id, $content) {
+  function mailmunch_insert_form_after_paragraph($insertion, $paragraph_id, $content) {
     $closing_p = '</p>';
     $paragraphs = explode($closing_p, $content);
     if ($paragraph_id == "middle") {
@@ -109,15 +114,16 @@
     return implode('', $paragraphs);
   }
 
-  add_filter( 'the_content', 'add_post_containers' );
+  add_filter( 'the_content', 'mailmunch_add_post_containers' );
 
-  function shortcode_form($atts) {
+  function mailmunch_shortcode_form($atts) {
     return "<div class='mailmunch-forms-short-code mailmunch-forms-widget-".$atts['id']."' style='display: none !important;'></div>";
   }
 
-  add_shortcode('mailmunch-form', 'shortcode_form');
+  add_shortcode('mailmunch-form', 'mailmunch_shortcode_form');
 
   function mailmunch_setup() {
+    $mm_helpers = new MailmunchHelpers();
     $mailmunch_data = unserialize(get_option("mailmunch_data"));
     $mailmunch_data["site_url"] = home_url();
     $mailmunch_data["site_name"] = get_bloginfo();
@@ -137,28 +143,50 @@
 
         $mm = new MailmunchApi($_POST["email"], $_POST["password"], "http://".MAILMUNCH_URL);
         if ($mm->validPassword()) {
+          if (get_option("mailmunch_guest_user")) {
+            // User exists and credentials are correct
+            // Let's move optin forms from guest user to real user
+            $account_info = $mm_helpers->getEmailPassword();
+            $mailmunch_email = $account_info['email'];
+            $mailmunch_password = $account_info['password'];
+            $mm = new MailmunchApi($mailmunch_email, $mailmunch_password, "http://".MAILMUNCH_URL);
+            $result = $mm->importWidgets($_POST["email"], $_POST["password"]);
+          }
+
           update_option("mailmunch_user_email", $_POST["email"]);
           update_option("mailmunch_user_password", $_POST["password"]);
+          delete_option("mailmunch_guest_user");
         }
 
       } else if ($post_action == "sign_up") {
 
-        update_option("mailmunch_user_email", $_POST["email"]);
-        update_option("mailmunch_user_password", $_POST["password"]);
-        $mailmunch_data = unserialize(get_option("mailmunch_data"));
-        $mailmunch_data["site_url"] = $_POST["site_url"];
-        $mailmunch_data["site_name"] = $_POST["site_name"];
-        update_option("mailmunch_data", serialize($mailmunch_data));
-
-        $account_info = getEmailPassword();
-        $mailmunch_email = $account_info['email'];
-        $mailmunch_password = $account_info['password'];
-
-        $mm = new MailmunchApi($mailmunch_email, $mailmunch_password, "http://".MAILMUNCH_URL);
-        if ($mm->isNewUser()) {
-          $mm->signUp();
+        if (empty($_POST["email"])) {
+          $invalid_email = true;
         } else {
-          $user_exists = true;
+          $account_info = $mm_helpers->getEmailPassword();
+          $mailmunch_email = $account_info['email'];
+          $mailmunch_password = $account_info['password'];
+
+          $mm = new MailmunchApi($mailmunch_email, $mailmunch_password, "http://".MAILMUNCH_URL);
+          if ($mm->isNewUser($_POST['email'])) {
+            $update_result = $mm->updateGuest($_POST['email']);
+            $result = json_decode($update_result['body']);
+            update_option("mailmunch_user_email", $result->email);
+            if (!$result->guest_user) { delete_option("mailmunch_guest_user"); }
+            $mailmunch_email = $result->email;
+
+            // We have update the guest with real email address, let's create a site now
+            $mm = new MailmunchApi($mailmunch_email, $mailmunch_password, "http://".MAILMUNCH_URL);
+
+            $update_result = $mm->updateSite($mailmunch_data["site_name"], $mailmunch_data["site_url"]);
+            $result = json_decode($update_result['body']);
+            $mailmunch_data = unserialize(get_option("mailmunch_data"));
+            $mailmunch_data["site_url"] = $result->domain;
+            $mailmunch_data["site_name"] = $result->name;
+            update_option("mailmunch_data", serialize($mailmunch_data));
+          } else {
+            $user_exists = true;
+          }
         }
 
       } else if ($post_action == "unlink_account") {
@@ -167,13 +195,13 @@
         $mailmunch_data["site_url"] = home_url();
         $mailmunch_data["site_name"] = get_bloginfo();
         update_option("mailmunch_data", serialize($mailmunch_data));
-        delete_option("mailmunch_user_email", "");
-        delete_option("mailmunch_user_password", "");
+        delete_option("mailmunch_user_email");
+        delete_option("mailmunch_user_password");
 
       } else if ($post_action == "delete_widget") {
 
         if ($_POST["site_id"] && $_POST["widget_id"]) {
-          $account_info = getEmailPassword();
+          $account_info = $mm_helpers->getEmailPassword();
           $mailmunch_email = $account_info['email'];
           $mailmunch_password = $account_info['password'];
           $mm = new MailmunchApi($account_info['email'], $account_info["password"], "http://".MAILMUNCH_URL);
@@ -183,109 +211,50 @@
       }
     }
 
+    // If the user does not exists, create a GUEST user
+    if (get_option("mailmunch_user_email") == "") {
+      $mailmunch_email = "guest_".uniqid()."@mailmunch.co";
+      $mailmunch_password = uniqid();
+      $mm = new MailmunchApi($mailmunch_email, $mailmunch_password, "http://".MAILMUNCH_URL);
+      $mm->createGuestUser();
+      update_option("mailmunch_user_email", $mailmunch_email);
+      update_option("mailmunch_user_password", $mailmunch_password);
+      update_option("mailmunch_guest_user", true);
+    }
+
     // If we already have the user's email stored, let's create the API instance
     // If we don't have it yet, make sure NOT to phone home any user data
     if (get_option("mailmunch_user_email") != "") {
-      $account_info = getEmailPassword();
+      $account_info = $mm_helpers->getEmailPassword();
       $mailmunch_email = $account_info['email'];
       $mailmunch_password = $account_info['password'];
 
       $mm = new MailmunchApi($mailmunch_email, $mailmunch_password, "http://".MAILMUNCH_URL);
-      $valid_password = $mm->validPassword();
+      if (!$mm->validPassword()) {
+        // Invalid user, create a GUEST user
+        $mailmunch_email = "guest_".uniqid()."@mailmunch.co";
+        $mailmunch_password = uniqid();
+        $mm = new MailmunchApi($mailmunch_email, $mailmunch_password, "http://".MAILMUNCH_URL);
+        $mm->createGuestUser();
+        update_option("mailmunch_user_email", $mailmunch_email);
+        update_option("mailmunch_user_password", $mailmunch_password);
+        update_option("mailmunch_guest_user", true);
+      }
     }
 
-    // If we don't already have the user's email, show the sign up / sign in form to the user
-    if (get_option("mailmunch_user_email") == "" || !$valid_password) {
-      $current_user = wp_get_current_user();
-?>
-<div id="sign-up-form" class="container<?php if (!$_POST || ($_POST["action"] != "sign_in" && $_POST["action"] != "unlink_account")) { ?> active<?php } ?>">
-  <div class="page-header">
-    <h1>Create Account</h1>
-  </div>
+    $mailmunch_guest_user = get_option("mailmunch_guest_user");
 
-  <p>We will now create your account on MailMunch. Make sure the following information is correct:</p>
 
-  <?php if ($user_exists) { ?>
-  <div id="invalid-alert" class="alert alert-danger" role="alert">Account with this email already exists. Please sign in using your password.</div>
-  <?php } ?>
-
-  <div class="form-container">
-    <form action="" method="POST">
-      <input type="hidden" name="action" value="sign_up" />
-
-      <div class="form-group">
-        <label>Wordpress Name</label>
-        <input type="text" placeholder="Site Name" name="site_name" value="<?php echo $mailmunch_data["site_name"] ?>" class="form-control">
-      </div>
-
-      <div class="form-group">
-        <label>Wordpress URL</label>
-        <input type="text" placeholder="Site URL" name="site_url" value="<?php echo $mailmunch_data["site_url"] ?>" class="form-control">
-      </div>
-
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" placeholder="Email Address" name="email" value="<?php echo $current_user->user_email ?>" class="form-control">
-      </div>
-
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" placeholder="Password" name="password" class="form-control">
-      </div>
-
-      <div class="form-group">
-        <input type="submit" value="Sign Up &raquo;" class="btn btn-success btn-lg" />
-      </div>
-    </form>
-  </div>
-
-  <p>Already have an account? <a id="show-sign-in" onclick="showSignInForm();">Sign In</a></p>
-</div>
-
-<div id="sign-in-form" class="container<?php if ($_POST && ($_POST["action"] == "sign_in" || $_POST["action"] == "unlink_account")) { ?> active<?php } ?>">
-  <div class="page-header">
-    <h1>Sign In</h1>
-  </div>
-
-  <p>Sign in using your email and password below.</p>
-
-  <?php if ($_POST && $_POST["action"] == "sign_in") { ?>
-  <div id="invalid-alert" class="alert alert-danger" role="alert">Invalid Email or Password. Please try again.</div>
-  <?php } ?>
-
-  <div class="form-container">
-    <form action="" method="POST">
-      <input type="hidden" name="action" value="sign_in" />
-
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" placeholder="Email Address" name="email" class="form-control" value="<?php echo $_POST["email"] ?>" />
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" placeholder="Password" name="password" class="form-control" />
-      </div>
-
-      <div class="form-group">
-        <input type="submit" value="Sign In &raquo;" class="btn btn-success btn-lg" />
-      </div>
-    </form>
-  </div>
-
-  <p>Forgot your password? <a href="http://<?php echo MAILMUNCH_URL; ?>/users/password/new" target="_blank">Click here</a> to retrieve it.</p>
-  <p>Don't have an account? <a id="show-sign-up" onclick="showSignUpForm();">Sign Up</a></p>
-</div>
-<?php
-
-      // Do NOT move beyond this until the user has granted permissions to sign up or signed in
-      return;
+    if ($mailmunch_guest_user) {
+      // This is a Guest USER. Do not collect any user data.
+      $sites = $mm_helpers->createAndGetGuestSites($mm);
+    } else {
+      $sites = $mm_helpers->createAndGetSites($mm);
     }
-
-    $sites = createAndGetSites($mm);
 
     if ($mailmunch_data["site_id"]) {
       // If there's a site already chosen, we need to get and save it's script_src in WordPress
-      $site = getSite($sites, $mailmunch_data["site_id"]);
+      $site = $mm_helpers->getSite($sites, $mailmunch_data["site_id"]);
       
       if ($site) {
         $mailmunch_data = array_merge(unserialize(get_option('mailmunch_data')), array("script_src" => $site->javascript_url));
@@ -303,7 +272,7 @@
     if (!$mailmunch_data["site_id"]) {
       // If there's NO chosen site yet
 
-      if (sizeof($sites) == 1 && $sites[0]->name == get_bloginfo()) {
+      if (sizeof($sites) == 1 && ($sites[0]->name == get_bloginfo() || $sites[0]->name == "WordPress")) {
         // If this mailmunch account only has 1 site and its name matches this WordPress blogs
 
         $site = $sites[0];
@@ -344,9 +313,106 @@
     }
 
     $request = $mm->getWidgetsHtml($mailmunch_data["site_id"]);
-    $widgets = $request->body;
+    $widgets = $request['body'];
     $widgets = str_replace("{{EMAIL}}", $mailmunch_email, $widgets);
     $widgets = str_replace("{{PASSWORD}}", $mailmunch_password, $widgets);
     echo $widgets;
+
+    if ($mailmunch_guest_user) {
+      $current_user = wp_get_current_user();
+?>
+
+<?php add_thickbox(); ?>
+
+<a id="signup-box-btn" href="#TB_inline?width=450&height=450&inlineId=signup-signin-box" title="Create Account" class="thickbox" style="display: none;">Sign Up</a>
+
+<div id="signup-signin-box" style="display:none;">
+  <div id="sign-up-form" class="<?php if (!$_POST || ($_POST["action"] != "sign_in" && $_POST["action"] != "unlink_account")) { ?> active<?php } ?>">
+    <div class="form-container">
+      <p style="margin-bottom: 0px;">To activate your optin forms, we will now create your account on MailMunch (<a onclick="showWhyAccount();" id="why-account-btn">Why?</a>).</p>
+
+      <div id="why-account" class="alert alert-warning" style="display: none;">
+        <h4>Why do I need a MailMunch account?</h4>
+
+        <p>
+          MailMunch is a not just a WordPress plugin but a standalone service. An account is required to identify your WordPress and serve your optin forms.
+        </p>
+      </div>
+
+      <?php if ($user_exists) { ?>
+      <div id="invalid-alert" class="alert alert-danger" role="alert">Account with this email already exists. Please sign in using your password.</div>
+      <?php } else if ($invalid_email) { ?>
+      <div id="invalid-alert" class="alert alert-danger" role="alert">Invalid email. Please enter a valid email below.</div>
+      <?php } ?>
+
+      <form action="" method="POST">
+        <input type="hidden" name="action" value="sign_up" />
+
+        <div class="form-group">
+          <label>Wordpress Name</label>
+          <input type="text" placeholder="Site Name" name="site_name" value="<?php echo $mailmunch_data["site_name"] ?>" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label>Wordpress URL</label>
+          <input type="text" placeholder="Site URL" name="site_url" value="<?php echo $mailmunch_data["site_url"] ?>" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="Email Address" name="email" value="<?php echo $current_user->user_email ?>" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <input type="submit" value="Sign Up &raquo;" class="btn btn-success btn-lg" />
+        </div>
+      </form>
+    </div>
+
+    <p>Already have an account? <a id="show-sign-in" onclick="showSignInForm();">Sign In</a></p>
+  </div>
+
+  <div id="sign-in-form" class="<?php if ($_POST && ($_POST["action"] == "sign_in" || $_POST["action"] == "unlink_account")) { ?> active<?php } ?>">
+    <p>Sign in using your email and password below.</p>
+
+    <?php if ($_POST && $_POST["action"] == "sign_in") { ?>
+    <div id="invalid-alert" class="alert alert-danger" role="alert">Invalid Email or Password. Please try again.</div>
+    <?php } ?>
+
+    <div class="form-container">
+      <form action="" method="POST">
+        <input type="hidden" name="action" value="sign_in" />
+
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="Email Address" name="email" class="form-control" value="<?php echo $_POST["email"] ?>" />
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" placeholder="Password" name="password" class="form-control" />
+        </div>
+
+        <div class="form-group">
+          <input type="submit" value="Sign In &raquo;" class="btn btn-success btn-lg" />
+        </div>
+      </form>
+    </div>
+
+    <p>Forgot your password? <a href="http://<?php echo MAILMUNCH_URL; ?>/users/password/new" target="_blank">Click here</a> to retrieve it.</p>
+    <p>Don't have an account? <a id="show-sign-up" onclick="showSignUpForm();">Sign Up</a></p>
+  </div>
+</div>
+
+<?php
+      if ($_POST) { 
+?>
+<script>
+jQuery(window).load(function() {
+  showSignupBox();
+});
+</script>
+<?php
+      }
+    }
   }
 ?>
