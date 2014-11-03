@@ -58,16 +58,27 @@ class Mailmunch_Sidebar_Widget extends WP_Widget {
         $mailmunch_user_email = get_option("mailmunch_user_email");
         $mailmunch_user_password = get_option("mailmunch_user_password");
         if (!empty($mailmunch_user_email) && !empty($mailmunch_user_password) && !empty($mailmunch_data["site_id"])) {
-            $mailmunch_email = get_option("mailmunch_user_email");
-            $mailmunch_password = get_option("mailmunch_user_password");
             $mailmunch_site_id = $mailmunch_data["site_id"];
-            $mm = new MailmunchApi($mailmunch_email, $mailmunch_password, "http://".MAILMUNCH_URL);
+            $mm = new MailmunchApi($mailmunch_user_email, $mailmunch_user_password, "http://".MAILMUNCH_URL);
             $result = $mm->widgets($mailmunch_site_id, "Sidebar");
             if ( !is_wp_error( $result ) ) {
                 $widgets = json_decode($result['body']);
             }
+        } else {
+        ?>
+            <p>No MailMunch account found. <a href="<?php echo admin_url( 'admin.php?page='.MAILMUNCH_SLUG ); ?>">Go Here First</a></p>
+        <?php
+            return;
         }
-
+        ?>
+        <script type="text/javascript">
+        window.onmessage = function (e) {
+          if (e.data === 'refresh') {
+            top.location.reload();
+          }
+        };
+        </script>
+        <?php
         if (sizeof($widgets) > 0) {
         ?>
         <p>
@@ -78,6 +89,7 @@ class Mailmunch_Sidebar_Widget extends WP_Widget {
         <p>
             <label for="<?php echo $this->get_field_id( 'form_id' ); ?>"><?php _e( 'Optin Form:' ); ?></label>
             <select class="widefat" id="<?php echo $this->get_field_id( 'form_id' ); ?>" name="<?php echo $this->get_field_name( 'form_id' ); ?>">
+                <option value="">None</option>
                 <?php
                 foreach ($widgets as $widget) {
                     echo "<option value='".$widget->id."'";
@@ -87,10 +99,12 @@ class Mailmunch_Sidebar_Widget extends WP_Widget {
                 ?>
             </select>
         </p>
+
+        <p><a href="//<?php echo MAILMUNCH_URL ?>/sso?email=<?php echo $mailmunch_user_email ?>&password=<?php echo $mailmunch_user_password ?>&next_url=<?php echo urlencode("/sites/".$mailmunch_data["site_id"]."/widgets/new?wp_layout=1&widget_type=Sidebar") ?>" target="_blank">Create New Sidebar Form</a></p>
         <?php 
         } else {
         ?>
-        <p>No optin forms found. <a href="<?php echo admin_url( 'admin.php?page='.MAILMUNCH_SLUG ); ?>">Create First One</a></p>
+        <p>No sidebar forms found. <a href="//<?php echo MAILMUNCH_URL ?>/sso?email=<?php echo $mailmunch_user_email ?>&password=<?php echo $mailmunch_user_password ?>&next_url=<?php echo urlencode("/sites/".$mailmunch_data["site_id"]."/widgets/new?wp_layout=1&widget_type=Sidebar") ?>" target="_blank">Create Your First One</a></p>
         <?php
         }
 

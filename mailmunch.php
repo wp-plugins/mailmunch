@@ -3,7 +3,7 @@
   Plugin Name: MailMunch
   Plugin URI: http://www.mailmunch.co
   Description: Collect email addresses from website visitors and grow your subscribers with our attention grabbing optin-forms, entry/exit intent technology, and other effective lead-generation forms.
-  Version: 1.3.7
+  Version: 1.3.8
   Author: MailMunch
   Author URI: http://www.mailmunch.co
   License: GPL2
@@ -14,7 +14,7 @@
   require_once( plugin_dir_path( __FILE__ ) . 'inc/sidebar_widget.php' );
 
   define( 'MAILMUNCH_SLUG', "mailmunch");
-  define( 'MAILMUNCH_VER', "1.3.7");
+  define( 'MAILMUNCH_VER', "1.3.8");
   define( 'MAILMUNCH_URL', "www.mailmunch.co");
 
   // Create unique WordPress instance ID
@@ -26,10 +26,21 @@
   add_action( 'admin_menu', 'mailmunch_register_page' );
 
   function mailmunch_register_page(){
+    add_options_page('MailMunch', 'MailMunch', 'manage_options', MAILMUNCH_SLUG, 'mailmunch_setup');
      $menu_page = add_menu_page( 'MailMunch Settings', 'MailMunch', 'manage_options', MAILMUNCH_SLUG, 'mailmunch_setup', plugins_url( 'img/icon.png', __FILE__ ), 102.786 ); 
      // If successful, load admin assets only on that page.
      if ($menu_page) add_action('load-' . $menu_page, 'mailmunch_load_plugin_assets');
   }
+
+  function mailmunch_plugin_settings_link($links)
+  {
+    $settings_link = '<a href="options-general.php?page='.MAILMUNCH_SLUG.'">Settings</a>';
+    array_unshift($links, $settings_link);
+    return $links;
+  }
+
+  $plugin = plugin_basename(__FILE__);
+  add_filter('plugin_action_links_'.$plugin, 'mailmunch_plugin_settings_link');
 
   function mailmunch_load_plugin_assets() {
     add_action( 'admin_enqueue_scripts', 'mailmunch_enqueue_admin_styles' );
