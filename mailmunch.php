@@ -3,7 +3,7 @@
   Plugin Name: MailMunch
   Plugin URI: http://www.mailmunch.co
   Description: Collect email addresses from website visitors and grow your subscribers with our attention grabbing optin-forms, entry/exit intent technology, and other effective lead-generation forms.
-  Version: 1.3.8
+  Version: 1.3.9
   Author: MailMunch
   Author URI: http://www.mailmunch.co
   License: GPL2
@@ -14,7 +14,7 @@
   require_once( plugin_dir_path( __FILE__ ) . 'inc/sidebar_widget.php' );
 
   define( 'MAILMUNCH_SLUG', "mailmunch");
-  define( 'MAILMUNCH_VER', "1.3.8");
+  define( 'MAILMUNCH_VER', "1.3.9");
   define( 'MAILMUNCH_URL', "www.mailmunch.co");
 
   // Create unique WordPress instance ID
@@ -247,7 +247,14 @@
       $mailmunch_password = $account_info['password'];
 
       $mm = new MailmunchApi($mailmunch_email, $mailmunch_password, "http://".MAILMUNCH_URL);
-      if (!$mm->validPassword()) {
+      $pass_check = $mm->validPassword();
+
+      if( is_wp_error( $pass_check ) ) {
+        echo $pass_check->get_error_message();
+        return;
+      }
+
+      if (!$pass_check) {
         // Invalid user, create a GUEST user
         $mailmunch_email = "guest_".uniqid()."@mailmunch.co";
         $mailmunch_password = uniqid();
