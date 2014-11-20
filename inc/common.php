@@ -30,7 +30,7 @@ class MailmunchHelpers {
       }
     }
 
-    return $site;
+    return (isset($site) ? $site : false);
   }
 
   function createAndGetSites($mm) {

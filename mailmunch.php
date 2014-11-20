@@ -3,7 +3,7 @@
   Plugin Name: MailMunch
   Plugin URI: http://www.mailmunch.co
   Description: Collect email addresses from website visitors and grow your subscribers with our attention grabbing optin-forms, entry/exit intent technology, and other effective lead-generation forms.
-  Version: 1.3.9
+  Version: 1.4.0
   Author: MailMunch
   Author URI: http://www.mailmunch.co
   License: GPL2
@@ -14,7 +14,7 @@
   require_once( plugin_dir_path( __FILE__ ) . 'inc/sidebar_widget.php' );
 
   define( 'MAILMUNCH_SLUG', "mailmunch");
-  define( 'MAILMUNCH_VER', "1.3.9");
+  define( 'MAILMUNCH_VER', "1.4.0");
   define( 'MAILMUNCH_URL', "www.mailmunch.co");
 
   // Create unique WordPress instance ID
@@ -32,8 +32,7 @@
      if ($menu_page) add_action('load-' . $menu_page, 'mailmunch_load_plugin_assets');
   }
 
-  function mailmunch_plugin_settings_link($links)
-  {
+  function mailmunch_plugin_settings_link($links) {
     $settings_link = '<a href="options-general.php?page='.MAILMUNCH_SLUG.'">Settings</a>';
     array_unshift($links, $settings_link);
     return $links;
@@ -87,14 +86,10 @@
     if (count($mailmunch_data) == 0) return;
 
     if (function_exists('wp_footer')) {
-      if (!$_POST['mailmunch_data']) {
-        add_action( 'wp_footer', 'mailmunch_load_asset_code' ); 
-      }
+      add_action( 'wp_footer', 'mailmunch_load_asset_code' ); 
     }
     elseif (function_exists('wp_head')) {
-      if (!$_POST['mailmunch_data']) {
-        add_action( 'wp_head', 'mailmunch_load_asset_code' ); 
-      }
+      add_action( 'wp_head', 'mailmunch_load_asset_code' ); 
     }
   }
 
@@ -148,7 +143,7 @@
 
     // This is a POST request. Let's save data first.
     if ($_POST) {
-      $post_data = $_POST["mailmunch_data"];
+      $post_data = (isset($_POST["mailmunch_data"]) ? $_POST["mailmunch_data"] : array());
       $post_action = $_POST["action"];
 
       if ($post_action == "save_settings") { 
@@ -276,7 +271,7 @@
       $sites = $mm_helpers->createAndGetSites($mm);
     }
 
-    if ($mailmunch_data["site_id"]) {
+    if (isset($mailmunch_data["site_id"])) {
       // If there's a site already chosen, we need to get and save it's script_src in WordPress
       $site = $mm_helpers->getSite($sites, $mailmunch_data["site_id"]);
       
@@ -293,7 +288,7 @@
       }
     }
 
-    if (!$mailmunch_data["site_id"]) {
+    if (!isset($mailmunch_data["site_id"])) {
       // If there's NO chosen site yet
 
       if (sizeof($sites) == 1 && ($sites[0]->name == get_bloginfo() || $sites[0]->name == "WordPress")) {
@@ -363,9 +358,9 @@
         </p>
       </div>
 
-      <?php if ($user_exists) { ?>
+      <?php if (isset($user_exists)) { ?>
       <div id="invalid-alert" class="alert alert-danger" role="alert">Account with this email already exists. Please sign in using your password.</div>
-      <?php } else if ($invalid_email) { ?>
+      <?php } else if (isset($invalid_email)) { ?>
       <div id="invalid-alert" class="alert alert-danger" role="alert">Invalid email. Please enter a valid email below.</div>
       <?php } ?>
 
@@ -409,7 +404,7 @@
 
         <div class="form-group">
           <label>Email Address</label>
-          <input type="email" placeholder="Email Address" name="email" class="form-control" value="<?php echo $_POST["email"] ?>" />
+          <input type="email" placeholder="Email Address" name="email" class="form-control" value="<?php if (isset($_POST["email"])) { echo $_POST["email"]; } ?>" />
         </div>
         <div class="form-group">
           <label>Password</label>
