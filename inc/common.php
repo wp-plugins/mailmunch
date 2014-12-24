@@ -13,7 +13,7 @@ class MailmunchHelpers {
     }
 
     if (empty($mailmunch_password)) {
-      update_option("mailmunch_user_password", uniqid());
+      update_option("mailmunch_user_password", base64_encode(uniqid()));
     }
 
     $mailmunch_email = get_option("mailmunch_user_email");

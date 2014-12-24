@@ -28,23 +28,12 @@
 
     function getWidgetsHtml($site_id) {
       $this->requestType = 'get';
-      return $this->ping('/sites/'.$site_id.'/widgets/wordpress');
+      return $this->ping('/sites/'.$site_id.'/widgets/wordpress?plugin=mailmunch');
     }
 
     function deleteWidget($site_id, $widget_id) {
       $this->requestType = 'post';
       return $this->ping('/sites/'.$site_id.'/widgets/'.$widget_id.'/delete');
-    }
-
-    function importWidgets($new_user_email, $new_user_password) {
-      $this->requestType = 'post';
-      return $this->ping('/wordpress/import_widgets', array(
-        'external_id' => get_option("mailmunch_wordpress_instance_id"),
-        'new_user_email' => $new_user_email,
-        'new_user_password' => $new_user_password,
-        'site_url' => home_url(),
-        'site_name' => get_bloginfo()
-      ));
     }
 
     function hasSite() {
@@ -101,11 +90,12 @@
       ), true);
     }
 
-    function updateGuest($new_email) {
+    function updateGuest($new_email, $new_password) {
       $this->requestType = 'post';
       return $this->ping('/wordpress/update_guest', array(
         'user' => array(
           'email' => $new_email,
+          'password' => $new_password,
           'guest_user' => false
           )
       ), true);
