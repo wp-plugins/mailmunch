@@ -34,3 +34,16 @@ function showSignUpForm() {
     document.getElementById("sign-in-form").style.display = 'none';
     document.getElementById("sign-up-form").style.display = 'block';
 }
+
+function showSignupBox(width, height) {
+    if (!width) width = 550;
+    if (!height) height = 450;
+    document.getElementById('why-account').style.display = 'none';
+    tb_show("Create Account","#TB_inline?width="+width+"&height="+height+"&inlineId=signup-signin-box",null);
+    return false;
+}
+
+function showWhyAccount() {
+    document.getElementById('why-account').style.display = 'block';
+    tb_show("Create Account","#TB_inline?width=550&height=500&inlineId=signup-signin-box",null);
+}

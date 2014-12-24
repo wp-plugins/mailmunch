@@ -11,6 +11,23 @@
   text-decoration: underline;
 }
 
+#why-account-btn {
+  cursor: pointer;
+}
+
+#why-account h4 {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+#why-account p {
+  margin-top: 0px;
+}
+
+.create-account-btn {
+  cursor: pointer;
+}
+
 #mailmunch_frame {
   width: 720px;
   height: 650px;
@@ -82,7 +99,7 @@
   border: 1px solid transparent;
   border-radius: 4px;
 }
-.alert h4 {
+.alert h4, .alert h3 {
   margin-top: 0;
   color: inherit;
 }
