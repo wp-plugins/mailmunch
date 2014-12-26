@@ -100,11 +100,11 @@ class Mailmunch_Sidebar_Widget extends WP_Widget {
             </select>
         </p>
 
-        <p><a href="//<?php echo MAILMUNCH_URL ?>/sso?email=<?php echo $mailmunch_user_email ?>&password=<?php echo $mailmunch_user_password ?>&next_url=<?php echo urlencode("/sites/".$mailmunch_data["site_id"]."/widgets/new?wp_layout=1&widget_type=Sidebar") ?>" target="_blank">Create New Sidebar Form</a></p>
+        <p><a href="//<?php echo MAILMUNCH_URL ?>/sso?email=<?php echo urlencode($mailmunch_user_email) ?>&password=<?php echo urlencode($mailmunch_user_password) ?>&next_url=<?php echo urlencode("/sites/".$mailmunch_data["site_id"]."/widgets/new?wp_layout=1&widget_type=Sidebar") ?>" target="_blank">Create New Sidebar Form</a></p>
         <?php 
         } else {
         ?>
-        <p>No sidebar forms found. <a href="//<?php echo MAILMUNCH_URL ?>/sso?email=<?php echo $mailmunch_user_email ?>&password=<?php echo $mailmunch_user_password ?>&next_url=<?php echo urlencode("/sites/".$mailmunch_data["site_id"]."/widgets/new?wp_layout=1&widget_type=Sidebar") ?>" target="_blank">Create Your First One</a></p>
+        <p>No sidebar forms found. <a href="//<?php echo MAILMUNCH_URL ?>/sso?email=<?php echo urlencode($mailmunch_user_email) ?>&password=<?php echo urlencode($mailmunch_user_password) ?>&next_url=<?php echo urlencode("/sites/".$mailmunch_data["site_id"]."/widgets/new?wp_layout=1&widget_type=Sidebar") ?>" target="_blank">Create Your First One</a></p>
         <?php
         }
 
