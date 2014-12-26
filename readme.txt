@@ -1,9 +1,9 @@
-===  MailMunch - Increase your Email Subscribers by over 500% ===
+=== MailMunch - Increase your Email Subscribers by over 500% ===
 Contributors: mailmunch
-Tags: widget, MailChimp, newsletter, newsletters, MailChimp plugin, Aweber,subscribe, popup, exit popup, exit intent, growth, subscribers, subscription, hellobar, email, posts, sharing, links, popover, analytics , newsletter, automatic , mail, lightbox, analytics, newsletter, getresponse, collect email, optin, optin forms, double optin, popover, optin monster, popup domination, sumome, list builder, mailchimp, popupdomination, optin revolution
+Tags: widget, MailChimp, newsletter, newsletters, MailChimp plugin, Aweber,subscribe, popup, exit popup, exit intent, growth, subscribers, subscription, hellobar, email, posts, sharing, links, popover, analytics , newsletter, automatic , mail, lightbox, analytics, newsletter, getresponse, collect email, optin, optin forms, double optin, popover, list builder, mailchimp
 Requires at least: 3.0.1
-Tested up to: 4.0
-Stable tag: 1.3.4
+Tested up to: 4.1
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -130,6 +130,12 @@ Why people use Aweber
 7. Another example from a user site
 
 == Changelog ==
+
+= 1.3.6 =
+* Fatal activation bug fix
+
+= 1.3.5 =
+* Improved sign up flow
 
 = 1.3.4 =
 * Fixed plugin activation bug
