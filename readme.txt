@@ -15,6 +15,8 @@ Collecting emails from your website visitors is the most important aspect of int
 
 MailMunch provides the tools you need to grow your email subscribers and convert them into customers. Now, people will find your blog, read your article, and subscribe via email to your newsletter. You can also sync your newsletter subscribers to MailChimp, GetResponse, Aweber, or others.
 
+[vimeo http://vimeo.com/117103275]
+
 = Features =
 
 * Easy integration with any WordPress theme
