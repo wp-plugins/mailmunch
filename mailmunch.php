@@ -3,7 +3,7 @@
   Plugin Name: MailMunch - Increase your Email Subscribers by over 500%
   Plugin URI: http://www.mailmunch.co
   Description: Collect email addresses from website visitors and grow your subscribers with our attention grabbing optin-forms, entry/exit intent technology, and other effective lead-generation forms.
-  Version: 1.4.3
+  Version: 1.4.4
   Author: MailMunch
   Author URI: http://www.mailmunch.co
   License: GPL2
@@ -14,7 +14,7 @@
   require_once( plugin_dir_path( __FILE__ ) . 'inc/sidebar_widget.php' );
 
   define( 'MAILMUNCH_SLUG', "mailmunch");
-  define( 'MAILMUNCH_VER', "1.4.3");
+  define( 'MAILMUNCH_VER', "1.4.4");
   define( 'MAILMUNCH_URL', "www.mailmunch.co");
 
   // Create unique WordPress instance ID
@@ -74,9 +74,8 @@
     if (is_author()) { echo "_mmunch['author'] = true;"; }
     if (is_tag()) { echo "_mmunch['tag'] = true;"; }
     if (is_attachment()) { echo "_mmunch['attachment'] = true;"; }
-
-    echo "(function(){ setTimeout(function(){ var d = document, f = d.getElementsByTagName('script')[0], s = d.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = '".$mailmunch_data["script_src"]."'; f.parentNode.insertBefore(s, f); }, 1); })();";
     echo "</script>";
+    echo('<script data-cfasync="false" src="//s3.amazonaws.com/mailmunch/static/site.js" id="mailmunch-script" data-mailmunch-site-id="'.$mailmunch_data["site_id"].'" async></script>');
   }
 
   add_action('init', 'mailmunch_assets');
@@ -85,11 +84,11 @@
     $mailmunch_data = unserialize(get_option("mailmunch_data"));
     if (count($mailmunch_data) == 0) return;
 
-    if (function_exists('wp_footer')) {
-      add_action( 'wp_footer', 'mailmunch_load_asset_code' ); 
-    }
-    elseif (function_exists('wp_head')) {
+    if (function_exists('wp_head')) {
       add_action( 'wp_head', 'mailmunch_load_asset_code' ); 
+    }
+    elseif (function_exists('wp_footer')) {
+      add_action( 'wp_footer', 'mailmunch_load_asset_code' ); 
     }
   }
 
