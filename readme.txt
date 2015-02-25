@@ -1,9 +1,9 @@
-===  MailMunch - Increase your Email Subscribers by over 500% ===
+=== MailMunch - Increase your Email Subscribers by over 500% ===
 Contributors: mailmunch
-Tags: widget, MailChimp, newsletter, newsletters, MailChimp plugin, Aweber,subscribe, popup, exit popup, exit intent, growth, subscribers, subscription, hellobar, email, posts, sharing, links, popover, analytics , newsletter, automatic , mail, lightbox, analytics, newsletter, getresponse, collect email, optin, optin forms, double optin, popover, optin monster, popup domination, sumome, list builder, mailchimp, popupdomination, optin revolution
+Tags: widget, MailChimp, newsletter, newsletters, MailChimp plugin, Aweber,subscribe, popup, exit popup, exit intent, growth, subscribers, subscription, hellobar, email, posts, sharing, links, popover, analytics , newsletter, automatic , mail, lightbox, analytics, newsletter, getresponse, collect email, optin, optin forms, double optin, popover, list builder, mailchimp
 Requires at least: 3.0.1
-Tested up to: 4.0
-Stable tag: 1.3.4
+Tested up to: 4.1
+Stable tag: 1.4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,6 +14,8 @@ The free and easiest way to increase your email subscribers by over 500%. MailMu
 Collecting emails from your website visitors is the most important aspect of internet marketing. MailMunch lets you create beautiful optin forms for your WordPress without writing a single line of code. Most blogs are designed for hit-and-run readers. People find your blog, read your article, and leave. Wouldn't it be nice if some of those people subscribe or share your amazing post?
 
 MailMunch provides the tools you need to grow your email subscribers and convert them into customers. Now, people will find your blog, read your article, and subscribe via email to your newsletter. You can also sync your newsletter subscribers to MailChimp, GetResponse, Aweber, or others.
+
+[vimeo http://vimeo.com/117103275]
 
 = Features =
 
@@ -130,6 +132,12 @@ Why people use Aweber
 7. Another example from a user site
 
 == Changelog ==
+
+= 1.3.6 =
+* Fatal activation bug fix
+
+= 1.3.5 =
+* Improved sign up flow
 
 = 1.3.4 =
 * Fixed plugin activation bug

@@ -1,3 +1,42 @@
+#signup-signin-box-overlay {
+  background-color: #000;
+  opacity: 0.8;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  height: 100%;
+  width: 100%;
+  z-index: 10000;
+}
+
+#signup-signin-close {
+  cursor: pointer;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  line-height: 0px;
+}
+
+#signup-signin-close img {
+  width: 20px;
+  height: 20px;
+}
+
+#signup-signin-box {
+  position: fixed;
+  background-color: #FFF;
+  z-index: 100000;
+  padding: 20px;
+  max-width: 600px;
+}
+
+#signup-signin-box h2.modal-header {
+  margin-top: 0px;
+  border-bottom: 1px solid #DEDEDE;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+}
+
 #sign-in-form, #sign-up-form {
   display: none;
 }
@@ -9,6 +48,23 @@
 #show-sign-in, #show-sign-up {
   cursor: pointer;
   text-decoration: underline;
+}
+
+#why-account-btn {
+  cursor: pointer;
+}
+
+#why-account h4 {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+#why-account p {
+  margin-top: 0px;
+}
+
+.create-account-btn {
+  cursor: pointer;
 }
 
 #mailmunch_frame {
@@ -82,7 +138,7 @@
   border: 1px solid transparent;
   border-radius: 4px;
 }
-.alert h4 {
+.alert h4, .alert h3 {
   margin-top: 0;
   color: inherit;
 }
