@@ -1,44 +1,39 @@
-=== MailMunch - Increase your Email Subscribers by over 500% ===
+=== MailMunch - Grow your Email Subscribers ===
 Contributors: mailmunch
-Tags: widget, MailChimp, newsletter, newsletters, MailChimp plugin, Aweber,subscribe, popup, exit popup, exit intent, growth, subscribers, subscription, hellobar, email, posts, sharing, links, popover, analytics , newsletter, automatic , mail, lightbox, analytics, newsletter, getresponse, collect email, optin, optin forms, double optin, popover, list builder, mailchimp
+Tags: signup form, newsletter, newsletters, subscribe, popup, exit popup, exit intent, subscribers, subscription, popover, lightbox, analytics, collect email, optin, optin form, optin forms, double optin, list builder, email form, lead, leads, mailchimp, mailchimp form, mailchimp newsletter, mailchimp plugin, mailchimp signup, mailchimp signup forms, mailchimp signup form, mailchimp widget, mailchimp subscribe, constant contact, contact contact form, constant contact newsletter, constant contact plugin, constant contact signup, constant contact signup forms, constant contact signup form, constant contact widget, constant contact subscribe, aweber, aweber form, aweber forms, aweber signup form, aweber plugin
 Requires at least: 3.0.1
 Tested up to: 4.2
 Stable tag: 1.4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-The free and easiest way to increase your email subscribers by over 500%. MailMunch lets you create beautiful optin forms for your WordPress.
+The best free plugin to get more email subscribers. Beautiful opt-in forms that integrate with MailChimp, Constant Contact, AWeber, Campaign Monitor and more.
 
 == Description ==
 
-Collecting emails from your website visitors is the most important aspect of internet marketing. MailMunch lets you create beautiful optin forms for your WordPress without writing a single line of code. Most blogs are designed for hit-and-run readers. People find your blog, read your article, and leave. Wouldn't it be nice if some of those people subscribe or share your amazing post?
+Collecting emails from your website visitors is the most important aspect of internet marketing. MailMunch lets you create beautiful optin forms for your WordPress without writing a single line of code. Most blogs are designed for hit-and-run readers. People find your blog, read your article, and leave. Wouldn't it be nice if some of those people subscribe so you can email them later?
 
-MailMunch provides the tools you need to grow your email subscribers and convert them into customers. Now, people will find your blog, read your article, and subscribe via email to your newsletter. You can also sync your newsletter subscribers to MailChimp, GetResponse, Aweber, or others.
+MailMunch provides the tools you need to grow your email subscribers and convert them into customers. Now, people will find your blog, read your article, and subscribe via email to your newsletter. You can also sync your newsletter subscribers to MailChimp, Constant Contact, AWeber, GetResponse, Campaign Monitor, InfusionSoft and others.
 
 [vimeo http://vimeo.com/117103275]
 
 = Features =
 
-* Easy integration with any WordPress theme
-* Complete integration with MailChimp, Aweber, Constant Contact, Campaign Monitor, MadMimi, iContact, GetResponse, InfusionSoft or any other email marketing service
-* Asynchronous loading that won't affect page load speed
-* Beautiful and fully customizable themes to make your email optin popup look amazing
-* Full A/B testing to see which popup gets more email subscribers
-* Page-level targeting will help you display optin forms only on specific pages, categories or posts
-* Choose whether to display the popover when a user enters your page, or when they're about to exit using our exit-intent technology.
-* Customizable email subscribe box wording and colors
-* Full HTML control of popover content
-* Simply export email subscribers in a .csv file
-* Quickly grow your email newsletter list
-* View email subscription analytics and statistics for all time
+* Opt-in Form Types: Popup, Embedded, Top Bar, Scroll Box, and Sidebar
+* Integrations: MailChimp, Constant Contact, AWeber, Campaign Monitor, GetResponse, InfusionSoft or any other email marketing service
+* Themes: Beautiful and fully customizable themes to make your email optin popup look amazing
+* A/B Testing: Find which opt-in form gets more email subscribers
+* Targeting: Display rules will help you display optin forms only on specific pages, categories or posts
+* Exit-Intent: Choose whether to display the popover when a user enters your page, or when they're about to exit.
+* Analytics: View email subscription analytics and statistics for all time
 
 = Beautiful Optin Form Designs =
 
-MailMunch Designer let's you choose from professionally designed high-converting popup themes. Each design has been maximized for high conversion rates. You can further customize the optin forms to match with your website or blog.
+MailMunch Designer let's you choose from professionally designed high-converting themes for Popups, Embed Forms, Top Bars, or other types. Each design has been maximized for high conversion rates. You can further customize the optin forms to match with your website or blog.
 
 = Connect With Major Email Providers =
 
-Easily connect with all major email marketing providers including Aweber, MailChimp, Constant Contact, GetResponse and Campaign Monitor. This means that if you use an email manager like MailChimp, your new email subscribers can automatically subscribe to your list instantly. Alternatively, you can simply export email subscribers in CSV format.
+Easily connect with all major email marketing providers including AWeber, MailChimp, Constant Contact, GetResponse and Campaign Monitor. This means that if you use an email manager like MailChimp, your new email subscribers can automatically subscribe to your list instantly. Alternatively, you can simply export email subscribers in CSV format.
 
 = A/B Testing =
 
@@ -55,6 +50,18 @@ You can have the optin forms appear immediately when a visitor opens your site, 
 = Analytics =
 
 Easily find out which pages, posts or optin forms are bringing in the most conversions. This will help influence your future decisions about content on your website and improve your lead generation strategy.
+
+= MailChimp Integration =
+
+> MailChimp integration allows you to painlessly add MailChimp sign up forms to your WordPress site. The MailChimp forms capture leads and sends it to specific MailChimp lists automatically. You can set it to single opt-in, or double opt-in. You can add MailChimp forms to posts, pages or sidebar, and also open it as a popup or top bar. Simply sign up and connect your MailChimp account into the plugin admin settings and it will pull in all your MailChimp lists. From there you can choose the lists you want to make forms for.
+
+Our improved signup plugin for MailChimp will proactively sign-up new subscribers to your MailChimp newsletter list. Our forms offer the same basic features that MailChimp's official plugin, but also much more. In addition to the form, analytics will help you track the number of form views and subscriptions.
+
+= Constant Contact Integration =
+
+> Constant Contact integration allows you to painlessly add Constant Contact sign up forms to your WordPress site. The Constant Contact forms capture leads and sends it to specific Constant Contact lists automatically. You can set it to single opt-in, or double opt-in. You can add Constant Contact forms to posts, pages or sidebar, and also open it as a popup or top bar. Simply sign up and connect your Constant Contact account into the plugin admin settings and it will pull in all your Constant Contact lists. From there you can choose the lists you want to make forms for.
+
+Our improved signup plugin for Constant Contact will proactively sign-up new subscribers to your newsletter list. Our forms offer the same basic features that Constant Contact's official plugin, but also much more. In addition to the Constant Contact form, analytics will help you track the number of form views and subscriptions.
 
 == Installation ==
 
@@ -83,11 +90,11 @@ No, It is super simple and easy to use for anyone. Our form designer lets you cr
 
 = Do you provide instant connections to any email providers? = 
 
-Yes, we provide instant integration with Mailchimp, Aweber, GetResponse, Constant Contact, Campaign Monitor and other email marketing apps. When a user subscribes, their email is automatically subscribed to your MailChimp, Aweber, or other newsletter list. Alternately, you can simply download a CSV list of your newsletter subscribers.
+Yes, we provide instant integration with Mailchimp, Constant Contact, AWeber, Campaign Monitor, GetResponse and other email marketing apps. When a user subscribes, their email is automatically subscribed to your MailChimp, Constant Contact, AWeber, or other newsletter list. Alternately, you can simply download a CSV list of your newsletter subscribers.
 
 = How can I integrate with a email marketing software? =
 
-Once you go to create your email subscribe form, you will see the integration step where you can integrate with MailChimp, Aweber and others.
+Once you go to create your email subscribe form, you will see the integration step where you can integrate with MailChimp, Constant Contact, AWeber and others.
 
 = How does the exit popup work? =
 
@@ -100,7 +107,7 @@ Our MailChimp email newsletter list builder helps Wordpress users build their au
 Email newsletter integration options
 
 * MailChimp newsletter integration
-* Aweber newsletter integration
+* AWeber newsletter integration
 * Constant Contact newsletter integration
 * Campaign Monitor newsletter integration
 * GetResponse newsletter integration
@@ -112,14 +119,30 @@ Why people use MailChimp
 * MailChimp easily sends newsletters
 * MailChimp handles lists of all sizes
 * MailChimp can send automated drip campaigns (scheduled emails)
+* MailChimp has better list management
+* MailChimp has great error messaging
+* MailChimp has interest groups/segments
 
-Why people use Aweber
+Why people use Constant Contact
 
-* Aweber has a $1 first month
-* Aweber automatically integrates with our plugin
-* Aweber easily sends your newsletters
-* Aweber scales to handle large or small lists
-* Aweber can also send automated drip campaigns
+* Constant Contact has free plans
+* Constant Contact automatically integrates with our plugin
+* Constant Contact easily sends newsletters
+* Constant Contact handles lists of all sizes
+* Constant Contact can send automated drip campaigns (scheduled emails)
+* Constant Contact has better list management
+* Constant Contact has great error messaging
+* Constant Contact has interest groups/segments
+* Constant Contact is a big company
+* Constant Contact is reliable
+
+Why people use AWeber
+
+* AWeber has a $1 first month
+* AWeber automatically integrates with our plugin
+* AWeber easily sends your newsletters
+* AWeber scales to handle large or small lists
+* AWeber can also send automated drip campaigns
 
 == Screenshots ==
 
