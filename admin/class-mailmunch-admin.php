@@ -141,7 +141,7 @@ class Mailmunch_Admin {
 	 */
 	public function menu() {
 		add_options_page( $this->integration_name, $this->integration_name, 'manage_options', MAILMUNCH_SLUG, array($this, 'get_dashboard_html'));
-		add_menu_page( $this->integration_name, $this->integration_name, 'manage_options', MAILMUNCH_SLUG, array($this, 'get_dashboard_html'), plugins_url( 'img/icon.png', __FILE__ ), 103.786);
+		add_menu_page( $this->integration_name, $this->integration_name, 'manage_options', MAILMUNCH_SLUG, array($this, 'get_dashboard_html'), plugins_url( 'img/icon.png', __FILE__ ), 105.786);
 
 		add_submenu_page( MAILMUNCH_SLUG, $this->integration_name, 'Forms', 'manage_options', MAILMUNCH_SLUG, array($this, 'get_dashboard_html') );
 		add_submenu_page( MAILMUNCH_SLUG, $this->integration_name. ' Settings', 'Settings', 'manage_options', MAILMUNCH_SLUG. '-settings', array($this, 'settings_page') );
