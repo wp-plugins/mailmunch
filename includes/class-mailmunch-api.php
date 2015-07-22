@@ -97,7 +97,9 @@
     function findOrCreateSite() {
       $site = $this->getSite();
       if (empty($site)) {
-        $site = $this->createSite(get_bloginfo(), home_url());
+        $siteName = get_bloginfo();
+        $decodedSiteName = html_entity_decode($siteName, ENT_QUOTES);
+        $site = $this->createSite($decodedSiteName, home_url());
         if (!empty($site)) $this->setSiteId($site->id);
       }
       return $site;
